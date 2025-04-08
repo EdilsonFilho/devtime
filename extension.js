@@ -1,85 +1,104 @@
 const vscode = require('vscode');
+const fs = require('fs');
+const path = require('path');
 
 let startTime = null;
-let intervalId = null;
+let accumulatedTimeMs = 0;
+let interval = null;
 let statusBarItem = null;
+let storageFilePath = '';
 
 function activate(context) {
-  console.log('DevTime is now active!');
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders) return;
 
-  const startCommand = vscode.commands.registerCommand('devtime.startTracking', () => {
-    if (startTime !== null) {
-      vscode.window.showInformationMessage('DevTime: Tracking is already running.');
-      return;
-    }
+  const workspacePath = workspaceFolders[0].uri.fsPath;
+  storageFilePath = path.join(workspacePath, '.devtime.json');
 
-    startTime = new Date();
-    vscode.window.showInformationMessage('DevTime: Tracking started!');
+  loadStoredTime();
 
-    // Cria o item na barra de status
-    if (!statusBarItem) {
-      statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
-      statusBarItem.show();
-    }
-
-    updateStatusBar(); // mostra imediatamente
-    intervalId = setInterval(updateStatusBar, 1000); // atualiza a cada segundo
-  });
-
-  const stopCommand = vscode.commands.registerCommand('devtime.stopTracking', () => {
+  const startCmd = vscode.commands.registerCommand('devtime.startTracking', () => {
     if (!startTime) {
-      vscode.window.showWarningMessage('DevTime: Tracking is not running.');
-      return;
+      startTime = new Date();
+      startInterval();
+      vscode.window.showInformationMessage('DevTime tracking started.');
+    } else {
+      vscode.window.showInformationMessage('Tracking is already running.');
     }
-
-    clearInterval(intervalId);
-    intervalId = null;
-
-    if (statusBarItem) {
-      statusBarItem.hide();
-    }
-
-    const endTime = new Date();
-    const timeSpentMs = endTime.getTime() - startTime.getTime();
-    const timeSpentSeconds = Math.floor(timeSpentMs / 1000);
-    const minutes = Math.floor(timeSpentSeconds / 60);
-    const seconds = timeSpentSeconds % 60;
-
-    vscode.window.showInformationMessage(
-      `DevTime: You spent ${minutes}m ${seconds}s working on this project.`
-    );
-
-    startTime = null;
   });
 
-  context.subscriptions.push(startCommand, stopCommand);
+  const stopCmd = vscode.commands.registerCommand('devtime.stopTracking', () => {
+    if (startTime) {
+      const now = new Date();
+      accumulatedTimeMs += now.getTime() - startTime.getTime();
+      startTime = null;
+      clearInterval(interval);
+      saveTime();
+      updateStatusBar();
+      vscode.window.showInformationMessage('DevTime tracking stopped.');
+    } else {
+      vscode.window.showInformationMessage('Tracking is not running.');
+    }
+  });
+
+  context.subscriptions.push(startCmd, stopCmd);
+
+  statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+  statusBarItem.show();
+
+  // ✅ Inicia automaticamente o tracking ao abrir o projeto
+  startTime = new Date();
+  startInterval();
+  updateStatusBar();
+}
+
+function startInterval() {
+  interval = setInterval(() => {
+    updateStatusBar();
+  }, 1000);
 }
 
 function updateStatusBar() {
-  if (!startTime || !statusBarItem) return;
+  let totalMs = accumulatedTimeMs;
+  if (startTime) {
+    const now = new Date();
+    totalMs += now.getTime() - startTime.getTime();
+  }
 
-  const now = new Date();
-  const elapsedMs = now.getTime() - startTime.getTime();
-  const totalSeconds = Math.floor(elapsedMs / 1000);
+  const totalHours = totalMs / (1000 * 60 * 60);
+  const displayTime = totalHours.toFixed(2);
 
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  statusBarItem.text = `$(watch) DevTime: ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
-  statusBarItem.tooltip = 'Time spent on this project (since tracking started)';
+  if (statusBarItem) {
+    statusBarItem.text = `$(clock) DevTime: ${displayTime} hrs`;
+  }
 }
 
-function pad(num) {
-  return num.toString().padStart(2, '0');
+function loadStoredTime() {
+  try {
+    if (fs.existsSync(storageFilePath)) {
+      const data = fs.readFileSync(storageFilePath, 'utf8');
+      const parsed = JSON.parse(data);
+      accumulatedTimeMs = typeof parsed.accumulatedTimeMs === 'number' ? parsed.accumulatedTimeMs : 0;
+    }
+  } catch (err) {
+    console.error('Failed to load stored DevTime:', err);
+  }
+}
+
+function saveTime() {
+  try {
+    const data = { accumulatedTimeMs };
+    fs.writeFileSync(storageFilePath, JSON.stringify(data), 'utf8');
+  } catch (err) {
+    console.error('Failed to save DevTime:', err);
+  }
 }
 
 function deactivate() {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
-  if (statusBarItem) {
-    statusBarItem.dispose();
+  if (startTime) {
+    const now = new Date();
+    accumulatedTimeMs += now.getTime() - startTime.getTime();
+    saveTime();
   }
 }
 
