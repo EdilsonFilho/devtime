@@ -3,6 +3,7 @@
   "displayName": "DevTime",
   "description": "DevTime is a Visual Studio Code extension that helps developers track the time spent working on projects, providing insights into productivity and energy consumption.",
   "version": "0.0.1",
+  "publisher": "edilsonsh",
   "engines": {
     "vscode": "^1.99.0"
   },
@@ -36,5 +37,10 @@
     "eslint": "^9.23.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1"
-  }
+  },
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/EdilsonFilho/devtime.git"
+}
+
 }

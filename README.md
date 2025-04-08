@@ -1,37 +1,62 @@
-## DevTime - VSCode Extension
-DevTime is a Visual Studio Code extension designed to help developers track the time they spend working on projects. It provides insights into productivity by recording the time spent on coding sessions, and it also tracks resource usage, such as CPU utilization. This extension automatically continues to track time even after restarting VSCode, offering a seamless experience.
+# DevTime - VSCode Extension
 
-## Features
-- Automatic Time Tracking: Once the user starts tracking, the extension will automatically keep track of the time spent on a project, including after VSCode restarts.
+DevTime is a Visual Studio Code extension designed to help developers track the time they spend working on projects. It provides insights into productivity by recording the time spent on coding sessions and detecting user activity. It continues tracking even after restarting VSCode, offering a seamless experience.
 
-- Inactivity Detection: The extension pauses time tracking if there is no user interaction (no typing or mouse movements) for 5 seconds. Once activity resumes, the tracking starts again.
+---
 
-- Persistent Time Storage: The tracked time is saved and loaded automatically when the user reopens the project, ensuring that the tracking continues across sessions.
+## 🚀 Features
 
-- Status Bar Display: The tracked time is displayed in the status bar of VSCode, showing the total time spent in hours with precision up to two decimal places.
+- **🔄 Automatic Time Tracking**  
+  Once tracking is started, DevTime automatically tracks the time spent on a project, even across VSCode restarts.
 
-Customizable Start and Stop Tracking: Users can start and stop the tracking manually, allowing flexibility for different workflows.
+- **💤 Inactivity Detection**  
+  If there is no typing or mouse movement for 5 seconds, time tracking pauses. When activity resumes, tracking continues.
 
-## Installation
-1. Open your VSCode editor.
+- **💾 Persistent Time Storage**  
+  Tracked time is saved locally and loaded automatically when the project is reopened.
 
-2. Open the Extensions tab in the sidebar or press Ctrl + Shift + X.
+- **⏱ Status Bar Display**  
+  Time is shown live in the bottom status bar in hours (with two decimal places).
 
-3. Search for DevTime.
+- **🎛 Manual Controls**  
+  Start and stop tracking manually via the Command Palette (`Ctrl+Shift+P`).
 
-4. Click on Install to install the extension.
+---
 
-Alternatively, you can manually install the extension from a local repository using the following steps:
+## 🛠 Installation
 
-i) Clone the repository and Navigate to the extension directory:
+### 📦 Option 1: Marketplace (coming soon)
+
+You’ll be able to install via the VSCode Marketplace.
+
+---
+
+### 📁 Option 2: Manual installation using `.vsix`
+
+#### Step 1: Clone the repository
+
 ```
 cd devtime
 ```
-ii) Install dependencies:
+
+#### Step 2: Install dependencies
+
 ```sh
 npm install
+
 ```
 
+#### Step 3: Step 3: Package the extension
+``` sh
+npx vsce package
+
+```
+This will generate a .vsix file (e.g., devtime-0.0.1.vsix).
+
+#### Step 4: Install the extension locally
+```sh
+code --install-extension devtime-0.0.1.vsix
+```
 
 ## Usage
 ### Start Tracking Time
