@@ -1,0 +1,40 @@
+{
+  "name": "devtime",
+  "displayName": "DevTime",
+  "description": "DevTime is a Visual Studio Code extension that helps developers track the time spent working on projects, providing insights into productivity and energy consumption.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:devtime.startTracking",
+    "onCommand:devtime.stopTracking"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "devtime.startTracking",
+        "title": "Start Tracking"
+      },
+      {
+        "command": "devtime.stopTracking",
+        "title": "Stop Tracking"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.99.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "eslint": "^9.23.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
