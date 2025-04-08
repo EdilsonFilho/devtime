@@ -53,6 +53,10 @@ If there is no interaction (typing or mouse movement) within 5 seconds, the exte
 - Time Display in the Status Bar
 The tracked time will be visible in the status bar at the bottom left of VSCode. The time is displayed in hours with two decimal places for easy tracking.
 
+![image](https://github.com/user-attachments/assets/1ab93845-6cba-43eb-abb8-a83fb191371c)
+
+
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
