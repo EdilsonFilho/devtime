@@ -25,9 +25,9 @@ DevTime is a Visual Studio Code extension designed to help developers track the 
 
 ## 🛠 Installation
 
-### 📦 Option 1: Marketplace (coming soon)
+### 📦 Option 1: Marketplace VSCODE
 
-You’ll be able to install via the VSCode Marketplace.
+Coming soon...
 
 ---
 
@@ -38,6 +38,8 @@ You’ll be able to install via the VSCode Marketplace.
 ```
 cd devtime
 ```
+
+*Note: Remember to add the devtime folder to your project's gitignore!*
 
 #### Step 2: Install dependencies
 
