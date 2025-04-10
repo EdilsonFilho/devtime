@@ -39,7 +39,7 @@ Coming soon...
 cd devtime
 ```
 
-*Note: Remember to add the devtime folder to your project's gitignore!*
+*Note: Remember to add the `devtime` folder and `.devtime.json` to your project's gitignore!*
 
 #### Step 2: Install dependencies
 
